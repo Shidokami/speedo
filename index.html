@@ -43,7 +43,6 @@
       transition: transform 0.1s linear;
       pointer-events: none;
     }
-
   </style>
 </head>
 <body>
@@ -54,42 +53,41 @@
 
   <script>
     const needle = document.getElementById('needle');
+    let engineOn = false;
+    let rpm = 0;
 
-    // Rotasi dari -190° (0 RPM) ke +70° (9000 RPM)
-    function setRPM(rpm) {
-      const clamped = Math.max(0, Math.min(rpm, 9000));
-      const deg = (clamped / 9000) * 289 - 369; // ubah range sesuai background
+    // Fungsi rotasi jarum
+    function setRPM(rpmValue) {
+      const clamped = Math.max(0, Math.min(rpmValue, 9000));
+      const deg = (clamped / 9000) * 289 - 369;
       needle.style.transform = `rotate(${deg}deg)`;
     }
 
-    // Simulasi RPM naik-turun
-    let rpm = 0;
-    let dir = 1;
+    // Fungsi nyalain / matiin mesin
+    function setEngine(state) {
+      engineOn = state;
+      if (!engineOn) {
+        rpm = 0;
+        setRPM(0); // Jarum ke posisi 0
+      } else {
+        rpm = 1000; // Idle di 1.000 RPM
+        setRPM(rpm);
+      }
+    }
+
+    // Simulasi perubahan RPM saat mesin nyala
     setInterval(() => {
-      rpm += dir * 300;
-      if (rpm >= 9000) dir = -1;
-      if (rpm <= 0) dir = 1;
-      setRPM(rpm);
-    }, 60);
+      if (engineOn) {
+        // Idle RPM sedikit bergetar biar realistis
+        rpm = 950 + Math.random() * 100;
+        setRPM(rpm);
+      }
+    }, 200);
+
+    // Simulasi status awal kendaraan
+    setEngine(true); // Coba ubah ke false buat ngetes kondisi mesin mati
   </script>
 
-  <!-- External script -->
   <script src="script.js"></script>
-
-  <!-- Simulasi awal status kendaraan -->
-  <script>
-    setEngine(true);
-    setSpeed(25); // 25 m/s
-    setRPM(2500);
-    setFuel(0.75); // 75% fuel
-    setHealth(0.9); // 90% health
-    setGear(3);
-    setHeadlights(1); // Turn on headlights
-    setLeftIndicator(true); // Turn on left indicator
-    setSeatbelts(true); // Seatbelts fastened
-    setSpeedMode(1); // Set to MPH
-  </script>
-
 </body>
 </html>
-
