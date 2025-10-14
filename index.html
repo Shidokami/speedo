@@ -64,7 +64,19 @@
       needle.style.transform = `rotate(${deg}deg)`;
       currentRPM = rpm;
     }
-    
+
+    // Nyalain / matiin mesin
+    function setEngine(state) {
+      engineOn = state;
+      if (state) {
+        // Mesin hidup → idle di 1000 RPM
+        setRPM(315);
+      } else {
+        // Mesin mati → jarum balik ke 0
+        setRPM(0);
+      }
+    }
+
 <script src="script.js">
 
 setEngine(true);
@@ -77,6 +89,11 @@ setHeadlights(1); // Turn on headlights
 setLeftIndicator(true); // Turn on left indicator
 setSeatbelts(true); // Seatbelts fastened
 setSpeedMode(1); // Set to MPH
+
+  <!-- Simulasi awal -->
+  <script>
+    setEngine(true); // mesin nyala, jarum di angka 1
+    // kalau mau coba mesin mati, ubah ke: setEngine(false);
   </script>
 </body>
 </html>
