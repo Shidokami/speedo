@@ -79,7 +79,7 @@
     // === Fungsi utama jarum ===
     function updateNeedle(rpm) {
       const clamped = Math.max(0, Math.min(rpm, 9000));
-      const deg = (clamped / 9000) * 260 - 190;
+      const deg = (clamped / 9000) * 290 - 0;
       needle.style.transform = `rotate(${deg}deg)`;
     }
 
