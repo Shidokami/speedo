@@ -35,7 +35,7 @@
       top: 78px;
       left: 213px;
       transform-origin: 50.6% 42%;
-      transform: rotate(-190deg);
+      transform: rotate(0deg);
       background: url('https://i.imgur.com/Z42441f.png') center/contain no-repeat;
       z-index: 2;
       transition: transform 0.2s ease-out;
@@ -79,7 +79,7 @@
     // === Fungsi utama jarum ===
     function updateNeedle(rpm) {
       const clamped = Math.max(0, Math.min(rpm, 9000));
-      const deg = (clamped / 9000) * 800 - 88;
+      const deg = (clamped / 9000) * 180 - 80;
       needle.style.transform = `rotate(${deg}deg)`;
     }
 
@@ -101,17 +101,6 @@
     window.setLeftIndicator = window.setLeftIndicator || function() {};
     window.setSeatbelts = window.setSeatbelts || function() {};
     window.setSpeedMode = window.setSpeedMode || function() {};
-
-    // === Simulasi ===
-    setEngine(true); // nyalain mesin
-    let rpm = 1000, dir = 1;
-    setInterval(() => {
-      if (!engineOn) return;
-      rpm += dir * 400;
-      if (rpm >= 9000) dir = -1;
-      if (rpm <= 1000) dir = 1;
-      setRPM(rpm);
-    }, 50);
   </script>
 </body>
 </html>
