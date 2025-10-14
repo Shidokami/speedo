@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Gauge RPM 0–9 (Stable Idle)</title>
+  <title>Gauge RPM 0–9 (Integrated)</title>
   <style>
     body {
       background-color: transparent;
@@ -20,7 +20,6 @@
       height: 256px;
     }
 
-    /* Background utama */
     .gauge-bg {
       position: absolute;
       width: 100%;
@@ -29,7 +28,6 @@
       z-index: 1;
     }
 
-    /* Jarum RPM */
     .needle {
       position: absolute;
       width: 100px;
@@ -37,11 +35,16 @@
       top: 78px;
       left: 213px;
       transform-origin: 50.6% 42%;
-      transform: rotate(-190deg); /* posisi awal 0 RPM */
+      transform: rotate(-190deg);
       background: url('https://i.imgur.com/Z42441f.png') center/contain no-repeat;
       z-index: 2;
       transition: transform 0.2s ease-out;
       pointer-events: none;
+    }
+
+    /* Tambahan buat placeholder text biar script.js ga error */
+    .info {
+      display: none;
     }
   </style>
 </head>
@@ -51,34 +54,63 @@
     <div id="needle" class="needle"></div>
   </div>
 
+  <!-- elemen dummy buat script.js -->
+  <div class="info">
+    <div id="engine"></div>
+    <div id="speed"></div>
+    <div id="rpm"></div>
+    <div id="fuel"></div>
+    <div id="health"></div>
+    <div id="gear"></div>
+    <div id="headlights"></div>
+    <div id="indicators"></div>
+    <div id="seatbelts"></div>
+    <div id="speed-mode"></div>
+  </div>
+
+  <!-- Panggil script bawaan -->
+  <script src="script.js"></script>
+
+  <!-- Override fungsi bawaan -->
   <script>
     const needle = document.getElementById('needle');
     let engineOn = false;
-    let currentRPM = 0;
 
-    // Rotasi jarum RPM dari -190° (0) ke +70° (9000)
-    function setRPM(rpm) {
-      if (!engineOn) rpm = 0; // jika mesin mati, paksa ke 0 RPM
+    // simpan versi asli biar ga hilang
+    const originalSetRPM = window.setRPM;
+
+    // override fungsi setRPM
+    window.setRPM = function(rpm) {
+      originalSetRPM(rpm); // tetap update text bawaan
+      if (!engineOn) rpm = 0;
       const clamped = Math.max(0, Math.min(rpm, 9000));
-      const deg = (clamped / 9000) * 289 - 369; 
+      const deg = (clamped / 9000) * 260 - 190;
       needle.style.transform = `rotate(${deg}deg)`;
-      currentRPM = rpm;
-    }
+    };
 
-    // Nyalain / matiin mesin
-    function setEngine(state) {
+    // override fungsi engine
+    const originalSetEngine = window.setEngine;
+    window.setEngine = function(state) {
+      originalSetEngine(state);
       engineOn = state;
-      if (state) {
-        // Mesin hidup → idle di 1000 RPM
-        setRPM(315);
-      } else {
-        // Mesin mati → jarum balik ke 0
+      if (!state) {
         setRPM(0);
+      } else {
+        setRPM(1000);
       }
-    }
+    };
 
-<script src="script.js">
-
+    // simulasi
+    setEngine(true);
+    setSpeed(25);
+    setRPM(2500);
+    setFuel(0.75);
+    setHealth(0.9);
+    setGear(3);
+    setHeadlights(1);
+    setLeftIndicator(true);
+    setSeatbelts(true);
+    setSpeedMode(1);
   </script>
 </body>
 </html>
