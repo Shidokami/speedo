@@ -68,38 +68,37 @@
     <div id="speed-mode"></div>
   </div>
 
-  <!-- panggil script bawaan lebih dulu -->
+  <!-- Muat script bawaan RageMP -->
   <script src="script.js"></script>
 
-  <!-- baru definisi jarum dan override -->
+  <!-- Override fungsi jarum biar tetep jalan -->
   <script>
     const needle = document.getElementById('needle');
     let engineOn = false;
 
-    // ganti fungsi setRPM bawaan
-  window.setRPM = function(rpm) {
-  if (!engineOn) rpm = 0;
+    // === Fungsi utama jarum ===
+    function updateNeedle(rpm) {
+      const clamped = Math.max(0, Math.min(rpm, 9000));
+      const deg = (clamped / 9000) * 260 - 190;
+      needle.style.transform = `rotate(${deg}deg)`;
+    }
 
-  const clamped = Math.max(0, Math.min(rpm, 9000));
+    // === Override bawaan script.js ===
+    window.setRPM = function(rpm) {
+      if (!engineOn) rpm = 0;
+      updateNeedle(rpm);
+    };
 
-  // rotasi dari -190° (0 RPM) ke +70° (9000 RPM)
-  const deg = (clamped / 9000) * 260 - 190;
-
-  needle.style.transform = `rotate(${deg}deg)`;
-};
-
-
-    // ganti fungsi setEngine bawaan
     window.setEngine = function(state) {
       engineOn = state;
       if (state) {
-        setRPM(1000);   // idle
+        updateNeedle(1000); // idle
       } else {
-        setRPM(0);      // mati
+        updateNeedle(0); // mati
       }
     };
 
-    // buat fungsi kosong biar script.js ga error
+    // Fungsi dummy (biar ga error)
     window.setSpeed = window.setSpeed || function() {};
     window.setFuel = window.setFuel || function() {};
     window.setHealth = window.setHealth || function() {};
@@ -109,9 +108,16 @@
     window.setSeatbelts = window.setSeatbelts || function() {};
     window.setSpeedMode = window.setSpeedMode || function() {};
 
-    // simulasi
-    setEngine(true);
-    setRPM(2500);
+    // === Simulasi ===
+    setEngine(true); // nyalain mesin
+    let rpm = 1000, dir = 1;
+    setInterval(() => {
+      if (!engineOn) return;
+      rpm += dir * 400;
+      if (rpm >= 9000) dir = -1;
+      if (rpm <= 1000) dir = 1;
+      setRPM(rpm);
+    }, 50);
   </script>
 </body>
 </html>
