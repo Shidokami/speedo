@@ -70,10 +70,10 @@
       engineOn = state;
       if (state) {
         // Mesin hidup → idle di 1000 RPM
-        setRPM(315);
+        setRPM(1050);
       } else {
         // Mesin mati → jarum balik ke 0
-        setRPM(0);
+        setRPM(50);
       }
     }
 
