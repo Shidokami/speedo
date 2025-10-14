@@ -83,12 +83,6 @@
       needle.style.transform = `rotate(${deg}deg)`;
     }
 
-    // === Override bawaan script.js ===
-    window.setRPM = function(rpm) {
-      if (!engineOn) rpm = 0;
-      updateNeedle(rpm);
-    };
-
     window.setEngine = function(state) {
       engineOn = state;
       if (state) {
@@ -121,3 +115,4 @@
   </script>
 </body>
 </html>
+
