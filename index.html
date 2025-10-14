@@ -77,12 +77,17 @@
     let engineOn = false;
 
     // ganti fungsi setRPM bawaan
-    window.setRPM = function(rpm) {
-      if (!engineOn) rpm = 0;
-      const clamped = Math.max(0, Math.min(rpm, 9000));
-      const deg = (clamped / 9000) * 260 - 190;
-      needle.style.transform = `rotate(${deg}deg)`;
-    };
+  window.setRPM = function(rpm) {
+  if (!engineOn) rpm = 0;
+
+  const clamped = Math.max(0, Math.min(rpm, 9000));
+
+  // rotasi dari -190° (0 RPM) ke +70° (9000 RPM)
+  const deg = (clamped / 9000) * 260 - 190;
+
+  needle.style.transform = `rotate(${deg}deg)`;
+};
+
 
     // ganti fungsi setEngine bawaan
     window.setEngine = function(state) {
